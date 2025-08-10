@@ -13,7 +13,6 @@ export class CategoriesApiService {
 
   find(): Observable<{ data: any[] }> {
     const params = qs.stringify({
-      locale: environment.defaultLocale,
       fields: ['id', 'name', 'slug'],
       sort: ['name:asc'],
     });

@@ -1,0 +1,12 @@
+<main class="main">
+  @if (brand$ | async; as brand) {
+    <dl>
+      <dt>Brand Name:</dt>
+      <dd>{{ brand.name }}</dd>
+      <dt>Logo:</dt>
+      <dd><img [src]="brand.logo.url" alt="Brand Logo" /></dd>
+    </dl>
+  } @else {
+    <h1>Loading...</h1>
+  }
+</main>

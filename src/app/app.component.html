@@ -1,9 +1,0 @@
-<main class="main">
-  <ul>
-    @for (brand of brands$ | async; track $index) {
-      <li><img [src]="brand.logo.url" />{{ brand.name }}</li>
-    }
-  </ul>
-</main>
-
-<router-outlet />

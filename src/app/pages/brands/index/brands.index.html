@@ -1,0 +1,9 @@
+<main class="main">
+  <ul>
+    @for (brand of brands$ | async; track $index) {
+      <li>
+        <a [routerLink]="['brands', brand.documentId]"><img [src]="brand.logo.url" />{{ brand.name }}</a>
+      </li>
+    }
+  </ul>
+</main>
