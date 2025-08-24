@@ -17,7 +17,7 @@ export class LanguageSwitcherComponent {
   private readonly router = inject(Router);
 
   availableLocales = this.localeService.getAvailableLocales();
-  currentLocale = this.localeService.getLocale();
+  currentLocale$ = this.localeService.currentLocale$;
 
   async onLocaleChange(event: Event): Promise<void> {
     const newLocale = (event.target as HTMLSelectElement).value; // Cast to HTMLSelectElement
@@ -36,11 +36,10 @@ export class LanguageSwitcherComponent {
       segments.map((segment) => segment.path),
       {
         queryParams: currentUrlTree.queryParams,
-      }
+      },
     );
 
     // Navigate to the new URL
-    await this.router.navigateByUrl(newUrlTree);
-    window.location.reload(); // Reload the page to apply the new locale
+    await this.router.navigateByUrl(newUrlTree, { replaceUrl: true });
   }
 }

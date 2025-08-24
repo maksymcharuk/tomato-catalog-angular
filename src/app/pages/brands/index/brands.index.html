@@ -1,11 +1,17 @@
 <main class="main">
-  <ul>
-    @for (brand of brands$ | async; track $index) {
-      <li>
-        <a [routerLink]="['brands', brand.documentId]">
-          <img [src]="brand.logo.url" />{{ brand.name }}
-        </a>
-      </li>
+  @if (brandsData$ | async; as data) {
+    @if (data.loading) {
+      <h1>Loading...</h1>
+    } @else {
+      @for (brand of data.brands; track brand.documentId) {
+        <ul>
+          <li>
+            <a [routerLink]="['brands', brand.documentId]">
+              <img [src]="brand.logo.url" />{{ brand.name }}
+            </a>
+          </li>
+        </ul>
+      }
     }
-  </ul>
+  }
 </main>

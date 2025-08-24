@@ -1,12 +1,14 @@
 <main class="main">
-  @if (brand$ | async; as brand) {
-    <dl>
-      <dt>{{ "brands.view.brandName" | translate }}</dt>
-      <dd>{{ brand.name }}</dd>
-      <dt>{{ "brands.view.brandLogo" | translate }}</dt>
-      <dd><img [src]="brand.logo.url" alt="Brand Logo" /></dd>
-    </dl>
-  } @else {
-    <h1>Loading...</h1>
+  @if (brandData$ | async; as data) {
+    @if (data.loading) {
+      <h1>Loading...</h1>
+    } @else {
+      <dl>
+        <dt>{{ "brands.view.brandName" | translate }}</dt>
+        <dd>{{ data.brand.name }}</dd>
+        <dt>{{ "brands.view.brandLogo" | translate }}</dt>
+        <dd><img [src]="data.brand.logo.url" alt="Brand Logo" /></dd>
+      </dl>
+    }
   }
 </main>

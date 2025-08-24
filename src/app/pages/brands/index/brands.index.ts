@@ -1,14 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { map } from 'rxjs/operators';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { BrandsApiService } from '../../../services/brands-api.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   imports: [AsyncPipe, RouterLink],
@@ -18,9 +15,25 @@ import { RouterLink } from '@angular/router';
   standalone: true,
 })
 export class BrandsIndexPage {
+  private readonly route = inject(ActivatedRoute);
   private readonly brandsApiService = inject(BrandsApiService);
 
-  protected readonly brands$ = this.brandsApiService
-    .find()
-    .pipe(map((response) => response.data));
+  protected readonly loading$ = new BehaviorSubject<boolean>(true);
+  protected readonly brands$ = this.route.params.pipe(
+    takeUntilDestroyed(),
+    tap(() => this.loading$.next(true)),
+    switchMap(() =>
+      this.brandsApiService
+        .find()
+        .pipe(finalize(() => this.loading$.next(false))),
+    ),
+    map((response) => response.data),
+  );
+  protected readonly brandsData$ = combineLatest([
+    this.loading$,
+    this.brands$,
+  ]).pipe(
+    startWith<[boolean, any[]]>([true, []]),
+    map(([loading, brands]) => ({ loading, brands })),
+  );
 }
