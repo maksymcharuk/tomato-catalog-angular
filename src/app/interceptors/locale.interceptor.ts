@@ -10,7 +10,6 @@ export function localeInterceptor(
 ): Observable<HttpEvent<unknown>> {
   const localeService = inject(LocaleService);
   const lang = localeService.getLocale();
-  console.log('Locale Interceptor:', lang);
   const modified = request.clone({
     params: request.params.append('locale', lang),
   });

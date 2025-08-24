@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { LocaleService } from '../../services/locale.service';
-import { Locale } from '../../configs/locales';
 
 @Component({
   selector: 'language-switcher',
@@ -20,14 +19,28 @@ export class LanguageSwitcherComponent {
   availableLocales = this.localeService.getAvailableLocales();
   currentLocale = this.localeService.getLocale();
 
-  constructor() {
-    console.log('Language Switcher Component Locale:', this.currentLocale);
-  }
-
   async onLocaleChange(event: Event): Promise<void> {
     const newLocale = (event.target as HTMLSelectElement).value; // Cast to HTMLSelectElement
-    this.localeService.setLocale(newLocale as Locale);
-    await this.router.navigate([`/${newLocale}`]); // Navigate to the new locale route
-    window.location.reload(); // Reload the page to apply changes
+
+    // Get the current route and query parameters
+    const currentUrlTree = this.router.parseUrl(this.router.url);
+    const segments = currentUrlTree.root.children['primary']?.segments || [];
+
+    // Replace the first segment (language) with the new locale
+    if (segments.length > 0) {
+      segments[0].path = newLocale;
+    }
+
+    // Create a new URL tree with the updated language
+    const newUrlTree = this.router.createUrlTree(
+      segments.map((segment) => segment.path),
+      {
+        queryParams: currentUrlTree.queryParams,
+      }
+    );
+
+    // Navigate to the new URL
+    await this.router.navigateByUrl(newUrlTree);
+    window.location.reload(); // Reload the page to apply the new locale
   }
 }

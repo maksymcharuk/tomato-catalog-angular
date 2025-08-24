@@ -25,10 +25,4 @@ export class BrandsViewPage {
   protected readonly brand$ = this.brandsApiService
     .findOne(this.route.snapshot.params['id'])
     .pipe(map((response) => response.data));
-
-  constructor() {
-    this.brand$.subscribe((brand) => {
-      console.log('Brand loaded:', brand);
-    });
-  }
 }

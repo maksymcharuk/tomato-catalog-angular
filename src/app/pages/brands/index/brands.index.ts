@@ -23,10 +23,4 @@ export class BrandsIndexPage {
   protected readonly brands$ = this.brandsApiService
     .find()
     .pipe(map((response) => response.data));
-
-  constructor() {
-    this.brands$.subscribe((brands) => {
-      console.log('Brands loaded:', brands);
-    });
-  }
 }

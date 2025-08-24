@@ -38,7 +38,6 @@ export class App implements OnInit {
   ngOnInit(): void {
     // Subscribe to locale changes
     this.localeService.currentLocale$.subscribe((locale) => {
-      console.log('App Component Locale:', locale);
       this.translate.use(locale);
     });
   }

@@ -13,7 +13,6 @@ export class LocaleGuard implements CanActivate {
     const available = this.localeService.getAvailableLocales();
 
     if (lang && available.includes(lang)) {
-      console.log('Locale Guard:', lang);
       this.localeService.setLocale(lang); // Set the locale in the service
       return true;
     }
