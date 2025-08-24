@@ -5,6 +5,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { provideTranslateService } from '@ngx-translate/core';
 
 import { localeInterceptor } from './interceptors/locale.interceptor';
 
@@ -15,5 +16,9 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([localeInterceptor])),
+    provideTranslateService({
+      fallbackLang: 'en',
+      lang: 'en',
+    }),
   ],
 };

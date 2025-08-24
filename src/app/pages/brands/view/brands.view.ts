@@ -5,13 +5,14 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 
 import { BrandsApiService } from '../../../services/brands-api.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './brands.view.html',
   styleUrl: './brands.view.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

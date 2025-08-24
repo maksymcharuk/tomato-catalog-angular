@@ -1,0 +1,7 @@
+<select (change)="onLocaleChange($event)" [value]="currentLocale">
+  @for(locale of availableLocales; track locale) {
+  <option [value]="locale" [selected]="locale === currentLocale">
+    {{ locale }}
+  </option>
+  }
+</select>

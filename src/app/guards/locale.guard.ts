@@ -13,7 +13,8 @@ export class LocaleGuard implements CanActivate {
     const available = this.localeService.getAvailableLocales();
 
     if (lang && available.includes(lang)) {
-      this.localeService.setLocale(lang);
+      console.log('Locale Guard:', lang);
+      this.localeService.setLocale(lang); // Set the locale in the service
       return true;
     }
 
@@ -23,7 +24,8 @@ export class LocaleGuard implements CanActivate {
       ? browserLang
       : DEFAULT_LOCALE;
 
-    this.router.navigate([`/${detected}`]);
+    this.localeService.setLocale(detected); // Set the detected locale
+    this.router.navigate([`/${detected}`]); // Redirect to the detected locale
     return false;
   }
 }

@@ -1,9 +1,9 @@
 <main class="main">
   @if (brand$ | async; as brand) {
     <dl>
-      <dt>Brand Name:</dt>
+      <dt>{{ 'brands.view.brandName' | translate }}</dt>
       <dd>{{ brand.name }}</dd>
-      <dt>Logo:</dt>
+      <dt>{{ 'brands.view.brandLogo' | translate }}</dt>
       <dd><img [src]="brand.logo.url" alt="Brand Logo" /></dd>
     </dl>
   } @else {

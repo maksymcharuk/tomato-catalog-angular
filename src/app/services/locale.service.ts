@@ -1,33 +1,30 @@
 import { Injectable } from '@angular/core';
-
+import { BehaviorSubject } from 'rxjs';
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE, Locale } from '../configs/locales';
 
 @Injectable({ providedIn: 'root' })
 export class LocaleService {
-  private currentLocale: Locale = DEFAULT_LOCALE;
+  private currentLocaleSubject = new BehaviorSubject<Locale>(DEFAULT_LOCALE);
+  currentLocale$ = this.currentLocaleSubject.asObservable();
 
   constructor() {
     const saved = localStorage.getItem('locale') as Locale | null;
-    if (saved && this.isValidLocale(saved)) {
-      this.currentLocale = saved;
-    }
+    const initialLocale = saved || DEFAULT_LOCALE;
+    this.setLocale(initialLocale);
   }
 
   getLocale(): Locale {
-    return this.currentLocale;
+    return this.currentLocaleSubject.value;
   }
 
-  setLocale(locale: Locale) {
-    if (!this.isValidLocale(locale)) return;
-    this.currentLocale = locale;
-    localStorage.setItem('locale', locale);
+  setLocale(locale: Locale): void {
+    if (AVAILABLE_LOCALES.includes(locale)) {
+      this.currentLocaleSubject.next(locale);
+      localStorage.setItem('locale', locale);
+    }
   }
 
   getAvailableLocales(): Locale[] {
     return [...AVAILABLE_LOCALES];
-  }
-
-  private isValidLocale(locale: string): locale is Locale {
-    return AVAILABLE_LOCALES.includes(locale as Locale);
   }
 }
