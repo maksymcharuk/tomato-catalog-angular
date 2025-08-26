@@ -2,12 +2,15 @@
   @if (brandData$ | async; as data) {
     @if (data.loading) {
       <h1>Loading...</h1>
-    } @else {
+    } @else if (data.brand) {
+      @let brand = data.brand;
       <dl>
         <dt>{{ "brands.view.brandName" | translate }}</dt>
-        <dd>{{ data.brand.name }}</dd>
-        <dt>{{ "brands.view.brandLogo" | translate }}</dt>
-        <dd><img [src]="data.brand.logo.url" alt="Brand Logo" /></dd>
+        <dd>{{ brand.name }}</dd>
+        @if (brand.logo) {
+          <dt>{{ "brands.view.brandLogo" | translate }}</dt>
+          <dd><img [src]="brand.logo.url" alt="Brand Logo" /></dd>
+        }
       </dl>
     }
   }

@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
+import { Brand } from '../../../api/brands';
 import { BrandsApiService } from '../../../services/brands-api.service';
 
 @Component({
@@ -33,7 +34,7 @@ export class BrandsIndexPage {
     this.loading$,
     this.brands$,
   ]).pipe(
-    startWith<[boolean, any[]]>([true, []]),
+    startWith<[boolean, Brand[]]>([true, []]),
     map(([loading, brands]) => ({ loading, brands })),
   );
 }

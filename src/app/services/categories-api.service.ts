@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import qs from 'qs';
 
 import { environment } from '../../environments/environment';
+import { ApiResponse } from '../api/shared';
+import { Category } from '../api/categories';
 
 @Injectable({
   providedIn: 'root',
@@ -11,13 +13,13 @@ import { environment } from '../../environments/environment';
 export class CategoriesApiService {
   private readonly http = inject(HttpClient);
 
-  find(): Observable<{ data: any[] }> {
+  find(): Observable<ApiResponse<Category[]>> {
     const params = qs.stringify({
       fields: ['id', 'name', 'slug'],
       sort: ['name:asc'],
     });
-    return this.http.get<{ data: any[] }>(
-      `${environment.apiUrl}/brands?${params}`
+    return this.http.get<ApiResponse<Category[]>>(
+      `${environment.apiUrl}/categories?${params}`,
     );
   }
 }

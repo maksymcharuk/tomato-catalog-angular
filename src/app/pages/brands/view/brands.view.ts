@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
+import { Brand } from '../../../api/brands';
 import { BrandsApiService } from '../../../services/brands-api.service';
 
 @Component({
@@ -17,6 +19,7 @@ import { BrandsApiService } from '../../../services/brands-api.service';
 })
 export class BrandsViewPage {
   private readonly route = inject(ActivatedRoute);
+  private readonly title = inject(Title);
   private readonly brandsApiService = inject(BrandsApiService);
 
   protected readonly loading$ = new BehaviorSubject<boolean>(true);
@@ -25,16 +28,23 @@ export class BrandsViewPage {
     tap(() => this.loading$.next(true)),
     switchMap((params) =>
       this.brandsApiService
-        .findOne(params['id'])
+        .findBySlug(params['slug'])
         .pipe(finalize(() => this.loading$.next(false))),
     ),
-    map((response) => response.data),
+    map((response) => {
+      const [brand] = response.data as Brand[];
+      return brand;
+    }),
+    tap((brand) => {
+      if (!brand) return;
+      this.title.setTitle(`${brand.name} | BC`);
+    }),
   );
   protected readonly brandData$ = combineLatest([
     this.loading$,
     this.brand$,
   ]).pipe(
-    startWith([true, undefined]),
+    startWith<[boolean, Brand | undefined]>([true, undefined]),
     map(([loading, brand]) => ({ loading, brand })),
   );
 }

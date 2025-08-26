@@ -12,8 +12,8 @@ export const routes: Routes = [
     canActivate: [LocaleGuard],
     children: [
       { path: 'brands', redirectTo: '', pathMatch: 'full' },
-      { path: '', component: BrandsIndexPage },
-      { path: 'brands/:id', component: BrandsViewPage },
+      { path: '', component: BrandsIndexPage, title: 'Список брендів | BC' },
+      { path: 'brands/:slug', component: BrandsViewPage, title: 'Бренд | BC' },
     ],
   },
   { path: '**', redirectTo: `/${DEFAULT_LOCALE}` },
