@@ -10,6 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE } from './configs/locales';
 import { LocaleService } from './services/locale.service';
 
+import { AppStore } from './store/app.store';
+
 import { AppBarComponent } from './components/app-bar/app-bar.component';
 
 import translationsEn from '../../public/i18n/en.json';
@@ -18,6 +20,7 @@ import translationsUk from '../../public/i18n/uk.json';
 @Component({
   selector: 'app',
   imports: [RouterOutlet, AppBarComponent],
+  providers: [AppStore],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

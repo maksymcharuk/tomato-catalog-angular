@@ -1,8 +1,10 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Dispatcher } from '@ngrx/signals/events';
 
 import { LocaleService } from '../../services/locale.service';
+import { appEvents } from '../../store/events/app.events';
 
 @Component({
   selector: 'language-switcher',
@@ -15,6 +17,7 @@ import { LocaleService } from '../../services/locale.service';
 export class LanguageSwitcherComponent {
   private readonly localeService = inject(LocaleService);
   private readonly router = inject(Router);
+  private readonly dispatcher = inject(Dispatcher);
 
   availableLocales = this.localeService.getAvailableLocales();
   currentLocale$ = this.localeService.currentLocale$;
@@ -41,5 +44,8 @@ export class LanguageSwitcherComponent {
 
     // Navigate to the new URL
     await this.router.navigateByUrl(newUrlTree, { replaceUrl: true });
+
+    // Dispatch locale change event
+    this.dispatcher.dispatch(appEvents.localeChanged(newLocale));
   }
 }

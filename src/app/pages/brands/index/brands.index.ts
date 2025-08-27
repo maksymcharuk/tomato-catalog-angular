@@ -1,15 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { Dispatcher } from '@ngrx/signals/events';
 
-import { Brand } from '../../../api/brands';
-import { BrandsApiService } from '../../../services/brands-api.service';
+import { AppStore } from '../../../store/app.store';
+import { brandsEvents } from '../../../store/events';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  imports: [AsyncPipe, RouterLink],
+  imports: [RouterLink],
   templateUrl: './brands.index.html',
   styleUrl: './brands.index.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,24 +20,19 @@ import { BrandsApiService } from '../../../services/brands-api.service';
 })
 export class BrandsIndexPage {
   private readonly route = inject(ActivatedRoute);
-  private readonly brandsApiService = inject(BrandsApiService);
+  private readonly title = inject(Title);
+  private readonly dispatcher = inject(Dispatcher);
+  readonly store = inject(AppStore);
 
-  protected readonly loading$ = new BehaviorSubject<boolean>(true);
-  protected readonly brands$ = this.route.params.pipe(
-    takeUntilDestroyed(),
-    tap(() => this.loading$.next(true)),
-    switchMap(() =>
-      this.brandsApiService
-        .find()
-        .pipe(finalize(() => this.loading$.next(false))),
-    ),
-    map((response) => response.data),
-  );
-  protected readonly brandsData$ = combineLatest([
-    this.loading$,
-    this.brands$,
-  ]).pipe(
-    startWith<[boolean, Brand[]]>([true, []]),
-    map(([loading, brands]) => ({ loading, brands })),
-  );
+  constructor() {
+    this.route.params.subscribe(() => {
+      this.dispatcher.dispatch(brandsEvents.loadBrands());
+    });
+
+    effect(() => {
+      const locale = this.store.locale();
+      const title = locale === 'uk' ? 'Список Брендів' : 'Brands List';
+      this.title.setTitle(`${title} - BC`);
+    });
+  }
 }

@@ -1,12 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import {
-  HTTP_INTERCEPTORS,
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 
+import { DEFAULT_LOCALE } from './configs/locales';
 import { localeInterceptor } from './interceptors/locale.interceptor';
 
 import { routes } from './app.routes';
@@ -17,8 +14,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([localeInterceptor])),
     provideTranslateService({
-      fallbackLang: 'en',
-      lang: 'en',
+      fallbackLang: DEFAULT_LOCALE,
+      lang: DEFAULT_LOCALE,
     }),
   ],
 };
