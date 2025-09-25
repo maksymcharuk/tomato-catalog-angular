@@ -5,7 +5,6 @@ import { AVAILABLE_LOCALES, DEFAULT_LOCALE, Locale } from '../configs/locales';
 @Injectable({ providedIn: 'root' })
 export class LocaleService {
   private currentLocaleSubject = new BehaviorSubject<Locale>(DEFAULT_LOCALE);
-  currentLocale$ = this.currentLocaleSubject.asObservable();
 
   constructor() {
     const saved = localStorage.getItem('locale') as Locale | null;

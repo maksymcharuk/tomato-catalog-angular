@@ -6,6 +6,7 @@ import qs from 'qs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../api/shared';
 import { Brand } from '../api/brands';
+import { Filters } from '../store/events';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +14,14 @@ import { Brand } from '../api/brands';
 export class BrandsApiService {
   private readonly http = inject(HttpClient);
 
-  find(): Observable<ApiResponse<Brand[]>> {
+  find(filters?: Filters): Observable<ApiResponse<Brand[]>> {
+    console.log('BrandsApiService#find', { filters });
     const params = new HttpParams({
       fromString: qs.stringify({
         fields: ['id', 'name', 'slug'],
         populate: ['logo', 'categories'],
         sort: ['name:asc'],
+        filters: buildFiltersQuery(filters),
       }),
     });
     return this.http.get<ApiResponse<Brand[]>>(`${environment.apiUrl}/brands`, {
@@ -53,4 +56,19 @@ export class BrandsApiService {
       params,
     });
   }
+}
+
+function buildFiltersQuery(filters?: Filters): any {
+  if (!filters) {
+    return undefined;
+  }
+
+  const query: any = {};
+  if (filters.query) {
+    query.name = { $containsi: filters.query };
+  }
+  if (filters.categories && filters.categories.length > 0) {
+    query.categories = { id: { $in: filters.categories } };
+  }
+  return query;
 }

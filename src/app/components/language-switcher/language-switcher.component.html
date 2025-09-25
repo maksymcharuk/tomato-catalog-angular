@@ -1,4 +1,5 @@
-@if (currentLocale$ | async; as currentLocale) {
+@let currentLocale = store.locale();
+@if (currentLocale) {
   <select (change)="onLocaleChange($event)" [value]="currentLocale">
     @for (locale of availableLocales; track locale) {
       <option [value]="locale" [selected]="locale === currentLocale">
