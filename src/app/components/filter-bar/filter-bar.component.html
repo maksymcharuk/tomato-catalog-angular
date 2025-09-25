@@ -6,8 +6,8 @@
     <select formControlName="categories" multiple>
       @for (category of store.categories(); track category.id) {
         <option
-          [value]="category.id"
-          [selected]="(form.value.categories ?? []).includes('' + category.id)"
+          [value]="category.slug"
+          [selected]="(form.value.categories ?? []).includes(category.slug)"
         >
           {{ category.name }}
         </option>

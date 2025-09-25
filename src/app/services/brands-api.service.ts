@@ -15,7 +15,6 @@ export class BrandsApiService {
   private readonly http = inject(HttpClient);
 
   find(filters?: Filters): Observable<ApiResponse<Brand[]>> {
-    console.log('BrandsApiService#find', { filters });
     const params = new HttpParams({
       fromString: qs.stringify({
         fields: ['id', 'name', 'slug'],
@@ -68,7 +67,7 @@ function buildFiltersQuery(filters?: Filters): any {
     query.name = { $containsi: filters.query };
   }
   if (filters.categories && filters.categories.length > 0) {
-    query.categories = { id: { $in: filters.categories } };
+    query.categories = { slug: { $in: filters.categories } };
   }
   return query;
 }
