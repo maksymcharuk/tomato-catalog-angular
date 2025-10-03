@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://uplifting-smile-3ed8038942.strapiapp.com',
-  apiUrl: 'https://uplifting-smile-3ed8038942.strapiapp.com/api',
+  baseUrl: 'https://capable-victory-946918ac19.strapiapp.com',
+  apiUrl: 'https://capable-victory-946918ac19.strapiapp.com/api',
   defaultLocale: 'uk',
 };
