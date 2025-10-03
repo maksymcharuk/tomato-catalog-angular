@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "brands-catalog-angular": {
+    "tomato-catalog-angular": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/brands-catalog-angular",
+            "outputPath": "dist/tomato-catalog-angular",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -70,10 +70,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "brands-catalog-angular:build:production"
+              "buildTarget": "tomato-catalog-angular:build:production"
             },
             "development": {
-              "buildTarget": "brands-catalog-angular:build:development"
+              "buildTarget": "tomato-catalog-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
