@@ -1,8 +1,8 @@
 {
-  "brands": {
+  "tomatoes": {
     "view": {
-      "brandName": "Назва бренду",
-      "brandLogo": "Логотип бренду"
+      "brandName": "Назва томату",
+      "brandLogo": "Логотип томату"
     }
   }
 }

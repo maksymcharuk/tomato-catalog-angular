@@ -1,17 +1,3 @@
 <form [formGroup]="form" class="filter-bar">
-  <input type="text" placeholder="Search brands..." formControlName="query" />
-
-  <div class="categories">
-    <label></label>
-    <select formControlName="categories" multiple>
-      @for (category of store.categories(); track category.id) {
-        <option
-          [value]="category.slug"
-          [selected]="(form.value.categories ?? []).includes(category.slug)"
-        >
-          {{ category.name }}
-        </option>
-      }
-    </select>
-  </div>
+  <input type="text" placeholder="Search tomatoe..." formControlName="query" />
 </form>

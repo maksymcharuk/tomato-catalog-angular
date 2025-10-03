@@ -1,0 +1,20 @@
+<filter-bar />
+
+<main class="main">
+  @if (store.tomatoesLoading()) {
+    <h1>Loading...</h1>
+  } @else {
+    <ul>
+      @for (tomato of store.tomatoes(); track tomato.documentId) {
+        <li>
+          <a [routerLink]="['tomatoes', tomato.slug]">
+            @if (tomato.logo) {
+              <img [src]="tomato.logo.url" />
+            }
+            {{ tomato.name }}
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</main>

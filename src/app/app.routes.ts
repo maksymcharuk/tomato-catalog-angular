@@ -3,17 +3,21 @@ import { Routes } from '@angular/router';
 import { DEFAULT_LOCALE } from './configs/locales';
 import { LocaleGuard } from './guards/locale.guard';
 
-import { BrandsIndexPage } from './pages/brands/index/brands.index';
-import { BrandsViewPage } from './pages/brands/view/brands.view';
+import { TomatoesIndexPage } from './pages/tomatoes/index/tomatoes.index';
+import { TomatoesViewPage } from './pages/tomatoes/view/tomatoes.view';
 
 export const routes: Routes = [
   {
     path: ':lang',
     canActivate: [LocaleGuard],
     children: [
-      { path: 'brands', redirectTo: '', pathMatch: 'full' },
-      { path: '', component: BrandsIndexPage, title: 'Список брендів | BC' },
-      { path: 'brands/:slug', component: BrandsViewPage, title: 'Бренд | BC' },
+      { path: 'tomatoes', redirectTo: '', pathMatch: 'full' },
+      { path: '', component: TomatoesIndexPage, title: 'Список томатів' },
+      {
+        path: 'tomatoes/:slug',
+        component: TomatoesViewPage,
+        title: 'Томат',
+      },
     ],
   },
   { path: '**', redirectTo: `/${DEFAULT_LOCALE}` },

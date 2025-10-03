@@ -7,17 +7,17 @@ import { withEffects } from '@ngrx/signals/events';
 import { map } from 'rxjs';
 
 import { AppStore } from '../../../store/app.store';
-import { appEvents, brandsEvents } from '../../../store/events';
+import { appEvents, tomatoesEvents } from '../../../store/events';
 
-type BrandsViewState = {};
+type TomatoesViewState = {};
 
-const initialState: BrandsViewState = {};
+const initialState: TomatoesViewState = {};
 
-export const BrandsViewStore = signalStore(
+export const TomatoesViewStore = signalStore(
   withState(initialState),
   withProps((store, appStore = inject(AppStore)) => ({
-    brand: appStore.brand,
-    brandLoading: appStore.brandLoading,
+    tomato: appStore.tomato,
+    tomatoLoading: appStore.tomatoLoading,
   })),
   withEffects(
     (
@@ -26,10 +26,10 @@ export const BrandsViewStore = signalStore(
       dispatcher = inject(Dispatcher),
       route = inject(ActivatedRoute),
     ) => ({
-      loadBrand$: events.on(appEvents.localeChanged).pipe(
+      loadTomato$: events.on(appEvents.localeChanged).pipe(
         map(() => {
           const slug = route.snapshot.params['slug'];
-          dispatcher.dispatch(brandsEvents.loadBrand(slug));
+          dispatcher.dispatch(tomatoesEvents.loadTomato(slug));
         }),
       ),
     }),
@@ -42,14 +42,14 @@ export const BrandsViewStore = signalStore(
 
       const slug = route.snapshot.params['slug'];
 
-      dispatcher.dispatch(brandsEvents.loadBrand(slug));
+      dispatcher.dispatch(tomatoesEvents.loadTomato(slug));
 
       effect(() => {
-        const brand = store.brand();
-        if (brand) {
-          title.setTitle(`${brand.name} - BC`);
+        const tomato = store.tomato();
+        if (tomato) {
+          title.setTitle(`${tomato.name} - BC`);
         } else {
-          title.setTitle('Brand Not Found - Brands Catalog');
+          title.setTitle('Tomato Not Found - Tomatoes Catalog');
         }
       });
     },

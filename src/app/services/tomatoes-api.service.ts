@@ -5,16 +5,16 @@ import qs from 'qs';
 
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../api/shared';
-import { Brand } from '../api/brands';
+import { Tomato } from '../api/tomatoes';
 import { Filters } from '../store/events';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BrandsApiService {
+export class TomatoesApiService {
   private readonly http = inject(HttpClient);
 
-  find(filters?: Filters): Observable<ApiResponse<Brand[]>> {
+  find(filters?: Filters): Observable<ApiResponse<Tomato[]>> {
     const params = new HttpParams({
       fromString: qs.stringify({
         fields: ['id', 'name', 'slug'],
@@ -23,27 +23,30 @@ export class BrandsApiService {
         filters: buildFiltersQuery(filters),
       }),
     });
-    return this.http.get<ApiResponse<Brand[]>>(`${environment.apiUrl}/brands`, {
-      params,
-    });
-  }
-
-  findOne(id: string): Observable<ApiResponse<Brand>> {
-    const params = new HttpParams({
-      fromString: qs.stringify({
-        fields: ['id', 'name', 'slug'],
-        populate: ['logo', 'categories'],
-      }),
-    });
-    return this.http.get<ApiResponse<Brand>>(
-      `${environment.apiUrl}/brands/${id}`,
+    return this.http.get<ApiResponse<Tomato[]>>(
+      `${environment.apiUrl}/tomatoes`,
       {
         params,
       },
     );
   }
 
-  findBySlug(slug: string): Observable<ApiResponse<Brand[]>> {
+  findOne(id: string): Observable<ApiResponse<Tomato>> {
+    const params = new HttpParams({
+      fromString: qs.stringify({
+        fields: ['id', 'name', 'slug'],
+        populate: ['logo', 'categories'],
+      }),
+    });
+    return this.http.get<ApiResponse<Tomato>>(
+      `${environment.apiUrl}/tomatoes/${id}`,
+      {
+        params,
+      },
+    );
+  }
+
+  findBySlug(slug: string): Observable<ApiResponse<Tomato[]>> {
     const params = new HttpParams({
       fromString: qs.stringify({
         filters: { slug },
@@ -51,9 +54,12 @@ export class BrandsApiService {
         populate: ['logo', 'categories'],
       }),
     });
-    return this.http.get<ApiResponse<Brand[]>>(`${environment.apiUrl}/brands`, {
-      params,
-    });
+    return this.http.get<ApiResponse<Tomato[]>>(
+      `${environment.apiUrl}/tomatoes`,
+      {
+        params,
+      },
+    );
   }
 }
 

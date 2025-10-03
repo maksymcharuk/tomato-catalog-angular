@@ -1,8 +1,8 @@
 {
-  "brands": {
+  "tomatoes": {
     "view": {
-      "brandName": "Brand name",
-      "brandLogo": "Brand logo"
+      "tomatoName": "Tomato name",
+      "tomatoLogo": "Tomato logo"
     }
   }
 }

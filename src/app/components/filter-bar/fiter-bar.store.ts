@@ -5,7 +5,7 @@ import { withEffects } from '@ngrx/signals/events';
 import { map } from 'rxjs';
 
 import { AppStore } from '../../store/app.store';
-import { appEvents, categoriesEvents, Filters } from '../../store/events';
+import { appEvents, Filters } from '../../store/events';
 import { ActivatedRoute, Router } from '@angular/router';
 
 type FilterBarState = {};
@@ -16,8 +16,6 @@ export const FilterBarStore = signalStore(
   withState(initialState),
   withProps((store, appStore = inject(AppStore)) => ({
     filters: appStore.filters,
-    categories: appStore.categories,
-    categoriesLoading: appStore.categoriesLoading,
   })),
   withEffects(
     (
@@ -27,11 +25,6 @@ export const FilterBarStore = signalStore(
       router = inject(Router),
       route = inject(ActivatedRoute),
     ) => ({
-      loadCategories$: events.on(appEvents.localeChanged).pipe(
-        map(() => {
-          dispatcher.dispatch(categoriesEvents.loadCategories());
-        }),
-      ),
       updateQueryParams$: events.on(appEvents.filtersChanged).pipe(
         map(({ payload: filters }) => {
           const queryParams: Partial<Record<keyof Filters, string>> = {};
@@ -52,11 +45,4 @@ export const FilterBarStore = signalStore(
       ),
     }),
   ),
-  withHooks({
-    onInit: () => {
-      const dispatcher = inject(Dispatcher);
-
-      dispatcher.dispatch(categoriesEvents.loadCategories());
-    },
-  }),
 );

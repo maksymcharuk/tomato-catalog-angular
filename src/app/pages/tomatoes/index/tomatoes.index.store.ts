@@ -6,29 +6,29 @@ import { withEffects } from '@ngrx/signals/events';
 import { map } from 'rxjs';
 
 import { AppStore } from '../../../store/app.store';
-import { appEvents, brandsEvents } from '../../../store/events';
+import { appEvents, tomatoesEvents } from '../../../store/events';
 
-type BrandsIndexState = {};
+type TomatoesIndexState = {};
 
-const initialState: BrandsIndexState = {};
+const initialState: TomatoesIndexState = {};
 
-export const BrandsIndexStore = signalStore(
+export const TomatoesIndexStore = signalStore(
   withState(initialState),
   withProps((store, appStore = inject(AppStore)) => ({
     filters: appStore.filters,
-    brands: appStore.brands,
-    brandsLoading: appStore.brandsLoading,
+    tomatoes: appStore.tomatoes,
+    tomatoesLoading: appStore.tomatoesLoading,
   })),
   withEffects(
     (store, events = inject(Events), dispatcher = inject(Dispatcher)) => ({
-      loadBrandsOnLocaleChanged$: events.on(appEvents.localeChanged).pipe(
+      loadTomatoesOnLocaleChanged$: events.on(appEvents.localeChanged).pipe(
         map(() => {
-          dispatcher.dispatch(brandsEvents.loadBrands(store.filters()));
+          dispatcher.dispatch(tomatoesEvents.loadTomatoes(store.filters()));
         }),
       ),
-      loadBrandsOnFilterChange$: events.on(appEvents.filtersChanged).pipe(
+      loadTomatoesOnFilterChange$: events.on(appEvents.filtersChanged).pipe(
         map(({ payload: filters }) => {
-          dispatcher.dispatch(brandsEvents.loadBrands(filters));
+          dispatcher.dispatch(tomatoesEvents.loadTomatoes(filters));
         }),
       ),
     }),
@@ -39,12 +39,12 @@ export const BrandsIndexStore = signalStore(
       const dispatcher = inject(Dispatcher);
       const title = inject(Title);
 
-      dispatcher.dispatch(brandsEvents.loadBrands(store.filters()));
+      dispatcher.dispatch(tomatoesEvents.loadTomatoes(store.filters()));
 
       effect(() => {
         const locale = appStore.locale();
         title.setTitle(
-          `${locale === 'uk' ? 'Список Брендів' : 'Brands List'} - BC`,
+          `${locale === 'uk' ? 'Список Томатів' : 'Tomatoes List'} - BC`,
         );
       });
     },

@@ -1,0 +1,16 @@
+<main class="main">
+  @let tomato = store.tomato();
+
+  @if (store.tomatoLoading()) {
+    <h1>Loading...</h1>
+  } @else if (tomato) {
+    <dl>
+      <dt>{{ "tomatoes.view.tomatoName" | translate }}</dt>
+      <dd>{{ tomato.name }}</dd>
+      @if (tomato.primaryImage) {
+        <dt>{{ "tomatoes.view.tomatoLogo" | translate }}</dt>
+        <dd><img [src]="tomato.primaryImage.url" alt="Tomato image" /></dd>
+      }
+    </dl>
+  }
+</main>

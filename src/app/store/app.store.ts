@@ -8,16 +8,12 @@ import { mapResponse } from '@ngrx/operators';
 import { switchMap, map, take, filter } from 'rxjs';
 
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE } from '../configs/locales';
-import { Brand } from '../api/brands';
-import { Category } from '../api/categories';
-import { BrandsApiService } from '../services/brands-api.service';
-import { CategoriesApiService } from '../services/categories-api.service';
+import { Tomato } from '../api/tomatoes';
+import { TomatoesApiService } from '../services/tomatoes-api.service';
 import {
   appEvents,
-  brandsApiEvents,
-  brandsEvents,
-  categoriesApiEvents,
-  categoriesEvents,
+  tomatoesApiEvents,
+  tomatoesEvents,
   Filters,
 } from './events';
 
@@ -31,17 +27,13 @@ type AppState = {
   // Filter
   filters: Filters;
 
-  // Brands
-  brands: Brand[];
-  brandsLoading: boolean;
+  // Tomatoes
+  tomatoes: Tomato[];
+  tomatoesLoading: boolean;
 
-  // Brand
-  brand: Brand | null;
-  brandLoading: boolean;
-
-  // Categories
-  categories: Category[];
-  categoriesLoading: boolean;
+  // Tomato
+  tomato: Tomato | null;
+  tomatoLoading: boolean;
 };
 
 const initialState: AppState = {
@@ -49,14 +41,11 @@ const initialState: AppState = {
 
   filters: {},
 
-  brands: [],
-  brandsLoading: false,
+  tomatoes: [],
+  tomatoesLoading: false,
 
-  brand: null,
-  brandLoading: false,
-
-  categories: [],
-  categoriesLoading: false,
+  tomato: null,
+  tomatoLoading: false,
 };
 
 export const AppStore = signalStore(
@@ -74,33 +63,24 @@ export const AppStore = signalStore(
         filters,
       }),
     ),
-    // Brands
-    on(brandsEvents.loadBrands, () => ({
-      brandsLoading: true,
+    // Tomatoes
+    on(tomatoesEvents.loadTomatoes, () => ({
+      tomatoesLoading: true,
     })),
-    on(brandsApiEvents.findSuccess, ({ payload: brands }) => ({
-      brands,
-      brandsLoading: false,
+    on(tomatoesApiEvents.findSuccess, ({ payload: tomatoes }) => ({
+      tomatoes,
+      tomatoesLoading: false,
     })),
-    on(brandsApiEvents.findFailure, () => ({ brandsLoading: false })),
-    // Brand
-    on(brandsEvents.loadBrand, () => ({
-      brandLoading: true,
+    on(tomatoesApiEvents.findFailure, () => ({ tomatoesLoading: false })),
+    // Tomato
+    on(tomatoesEvents.loadTomato, () => ({
+      tomatoLoading: true,
     })),
-    on(brandsApiEvents.findOneSuccess, ({ payload: brand }) => ({
-      brand,
-      brandLoading: false,
+    on(tomatoesApiEvents.findOneSuccess, ({ payload: tomato }) => ({
+      tomato,
+      tomatoLoading: false,
     })),
-    on(brandsApiEvents.findOneFailure, () => ({ brandsLoading: false })),
-    // Categories
-    on(categoriesEvents.loadCategories, () => ({
-      categoriesLoading: true,
-    })),
-    on(categoriesApiEvents.findSuccess, ({ payload: categories }) => ({
-      categories,
-      categoriesLoading: false,
-    })),
-    on(categoriesApiEvents.findFailure, () => ({ categoriesLoading: false })),
+    on(tomatoesApiEvents.findOneFailure, () => ({ tomatoesLoading: false })),
   ),
   withEffects(
     (
@@ -108,45 +88,32 @@ export const AppStore = signalStore(
       events = inject(Events),
       route = inject(ActivatedRoute),
       translate = inject(TranslateService),
-      brandsApiService = inject(BrandsApiService),
-      categoriesApiService = inject(CategoriesApiService),
+      tomatoesApiService = inject(TomatoesApiService),
     ) => ({
       setTranslations$: events.on(appEvents.localeChanged).pipe(
         map(({ payload: locale }) => {
           translate.use(locale);
         }),
       ),
-      loadBrands$: events.on(brandsEvents.loadBrands).pipe(
+      loadTomatoes$: events.on(tomatoesEvents.loadTomatoes).pipe(
         switchMap(({ payload: filters }) => {
-          return brandsApiService.find(filters).pipe(
+          return tomatoesApiService.find(filters).pipe(
             mapResponse({
-              next: (response) => brandsApiEvents.findSuccess(response.data),
+              next: (response) => tomatoesApiEvents.findSuccess(response.data),
               error: (error: { message: string }) =>
-                brandsApiEvents.findFailure(error.message),
+                tomatoesApiEvents.findFailure(error.message),
             }),
           );
         }),
       ),
-      loadBrand$: events.on(brandsEvents.loadBrand).pipe(
+      loadTomato$: events.on(tomatoesEvents.loadTomato).pipe(
         switchMap(({ payload: slug }) => {
-          return brandsApiService.findBySlug(slug).pipe(
+          return tomatoesApiService.findBySlug(slug).pipe(
             mapResponse({
               next: (response) =>
-                brandsApiEvents.findOneSuccess(response.data[0]),
+                tomatoesApiEvents.findOneSuccess(response.data[0]),
               error: (error: { message: string }) =>
-                brandsApiEvents.findOneFailure(error.message),
-            }),
-          );
-        }),
-      ),
-      loadCategories$: events.on(categoriesEvents.loadCategories).pipe(
-        switchMap(() => {
-          return categoriesApiService.find().pipe(
-            mapResponse({
-              next: (response) =>
-                categoriesApiEvents.findSuccess(response.data),
-              error: (error: { message: string }) =>
-                categoriesApiEvents.findFailure(error.message),
+                tomatoesApiEvents.findOneFailure(error.message),
             }),
           );
         }),

@@ -3,10 +3,10 @@ import { eventGroup } from '@ngrx/signals/events';
 
 import { Filters } from './app.events';
 
-export const brandsEvents = eventGroup({
-  source: 'Brands',
+export const tomatoesEvents = eventGroup({
+  source: 'Tomatoes',
   events: {
-    loadBrands: type<Filters | undefined>(),
-    loadBrand: type<string>(),
+    loadTomatoes: type<Filters | undefined>(),
+    loadTomato: type<string>(),
   },
 });
