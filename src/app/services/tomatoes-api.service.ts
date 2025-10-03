@@ -17,8 +17,8 @@ export class TomatoesApiService {
   find(filters?: Filters): Observable<ApiResponse<Tomato[]>> {
     const params = new HttpParams({
       fromString: qs.stringify({
-        fields: ['id', 'name', 'slug'],
-        populate: ['logo', 'categories'],
+        fields: ['id', 'name', 'description', 'price'],
+        populate: ['primaryImage', 'images'],
         sort: ['name:asc'],
         filters: buildFiltersQuery(filters),
       }),
@@ -34,28 +34,12 @@ export class TomatoesApiService {
   findOne(id: string): Observable<ApiResponse<Tomato>> {
     const params = new HttpParams({
       fromString: qs.stringify({
-        fields: ['id', 'name', 'slug'],
-        populate: ['logo', 'categories'],
+        fields: ['id', 'name', 'description', 'price'],
+        populate: ['primaryImage', 'images'],
       }),
     });
     return this.http.get<ApiResponse<Tomato>>(
       `${environment.apiUrl}/tomatoes/${id}`,
-      {
-        params,
-      },
-    );
-  }
-
-  findBySlug(slug: string): Observable<ApiResponse<Tomato[]>> {
-    const params = new HttpParams({
-      fromString: qs.stringify({
-        filters: { slug },
-        fields: ['id', 'name', 'slug'],
-        populate: ['logo', 'categories'],
-      }),
-    });
-    return this.http.get<ApiResponse<Tomato[]>>(
-      `${environment.apiUrl}/tomatoes`,
       {
         params,
       },

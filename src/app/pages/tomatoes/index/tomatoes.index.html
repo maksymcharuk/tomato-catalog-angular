@@ -1,20 +1,40 @@
-<filter-bar />
+<div class="container">
+  <div class="grid">
+    <div class="col-12">
+      <filter-bar />
+    </div>
+  </div>
+</div>
 
 <main class="main">
-  @if (store.tomatoesLoading()) {
-    <h1>Loading...</h1>
-  } @else {
-    <ul>
-      @for (tomato of store.tomatoes(); track tomato.documentId) {
-        <li>
-          <a [routerLink]="['tomatoes', tomato.slug]">
-            @if (tomato.logo) {
-              <img [src]="tomato.logo.url" />
+  <div class="container">
+    <div class="grid">
+      <div class="col-12">
+        @if (store.tomatoesLoading()) {
+          <h1>Loading...</h1>
+        } @else {
+          <div class="grid">
+            @for (tomato of store.tomatoes(); track tomato.documentId) {
+              <div class="col-3">
+                <p-card>
+                  <ng-template #header>
+                    @if (tomato.primaryImage) {
+                      <img
+                        alt="Card"
+                        class="w-full"
+                        [src]="tomato.primaryImage.url"
+                      />
+                    }
+                  </ng-template>
+                  <ng-template #title> {{ tomato.name }} </ng-template>
+                  <ng-template #subtitle> {{ tomato.price }} </ng-template>
+                  <p>{{ tomato.description }}</p>
+                </p-card>
+              </div>
             }
-            {{ tomato.name }}
-          </a>
-        </li>
-      }
-    </ul>
-  }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
 </main>

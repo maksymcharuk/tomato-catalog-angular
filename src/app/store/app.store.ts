@@ -107,11 +107,11 @@ export const AppStore = signalStore(
         }),
       ),
       loadTomato$: events.on(tomatoesEvents.loadTomato).pipe(
-        switchMap(({ payload: slug }) => {
-          return tomatoesApiService.findBySlug(slug).pipe(
+        switchMap(({ payload: id }) => {
+          return tomatoesApiService.findOne(id).pipe(
             mapResponse({
               next: (response) =>
-                tomatoesApiEvents.findOneSuccess(response.data[0]),
+                tomatoesApiEvents.findOneSuccess(response.data),
               error: (error: { message: string }) =>
                 tomatoesApiEvents.findOneFailure(error.message),
             }),

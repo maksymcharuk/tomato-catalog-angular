@@ -3,11 +3,14 @@ import { RouterOutlet } from '@angular/router';
 
 import { AppStore } from './store/app.store';
 
-import { AppBar } from './components/app-bar/app-bar.component';
+// import { AppBar } from './components/app-bar/app-bar.component';
 
 @Component({
   selector: 'app',
-  imports: [RouterOutlet, AppBar],
+  imports: [
+    RouterOutlet,
+    // AppBar
+  ],
   providers: [AppStore],
   templateUrl: './app.html',
   styleUrl: './app.scss',

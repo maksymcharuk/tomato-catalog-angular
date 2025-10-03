@@ -5,6 +5,7 @@ export interface Tomato {
   documentId: string;
   name: string;
   description: string;
+  price: number;
   images: Media[];
   primaryImage: Media;
 }

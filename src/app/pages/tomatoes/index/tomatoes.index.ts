@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { CardModule } from 'primeng/card';
 
 import { FilterBar } from '../../../components/filter-bar/filter-bar.component';
 import { TomatoesIndexStore } from './tomatoes.index.store';
 
 @Component({
-  imports: [RouterLink, FilterBar],
+  imports: [FilterBar, CardModule],
   providers: [TomatoesIndexStore],
   templateUrl: './tomatoes.index.html',
   styleUrl: './tomatoes.index.scss',
