@@ -1,40 +1,39 @@
-<div class="container">
-  <div class="grid">
-    <div class="col-12">
-      <filter-bar />
-    </div>
+<div class="sm:container mx-auto px-4">
+  <div class="my-4">
+    <filter-bar />
   </div>
-</div>
 
-<main class="main">
-  <div class="container">
-    <div class="grid">
-      <div class="col-12">
-        @if (store.tomatoesLoading()) {
-          <h1>Loading...</h1>
-        } @else {
-          <div class="grid">
-            @for (tomato of store.tomatoes(); track tomato.documentId) {
-              <div class="col-3">
-                <p-card>
-                  <ng-template #header>
-                    @if (tomato.primaryImage) {
-                      <img
-                        alt="Card"
-                        class="w-full"
-                        [src]="tomato.primaryImage.url"
-                      />
-                    }
-                  </ng-template>
-                  <ng-template #title> {{ tomato.name }} </ng-template>
-                  <ng-template #subtitle> {{ tomato.price }} </ng-template>
-                  <p>{{ tomato.description }}</p>
-                </p-card>
-              </div>
-            }
+  <main class="main">
+    @if (store.tomatoesLoading()) {
+      <div class="flex justify-center items-center h-64">
+        <p-progress-spinner
+          strokeWidth="8"
+          fill="transparent"
+          animationDuration=".5s"
+          [style]="{ width: '50px', height: '50px' }"
+        />
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        @for (tomato of store.tomatoes(); track tomato.documentId) {
+          <div class="flex">
+            <p-card>
+              <ng-template #header>
+                @if (tomato.primaryImage) {
+                  <img
+                    alt="Card"
+                    class="w-full"
+                    [src]="tomato.primaryImage.url"
+                  />
+                }
+              </ng-template>
+              <ng-template #title> {{ tomato.name }} </ng-template>
+              <ng-template #subtitle> {{ tomato.price }} </ng-template>
+              <p>{{ tomato.description }}</p>
+            </p-card>
           </div>
         }
       </div>
-    </div>
-  </div>
-</main>
+    }
+  </main>
+</div>

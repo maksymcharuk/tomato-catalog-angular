@@ -8,6 +8,7 @@ import Aura from '@primeuix/themes/aura';
 
 import { DEFAULT_LOCALE } from './configs/locales';
 import { localeInterceptor } from './interceptors/locale.interceptor';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 import { routes } from './app.routes';
 
@@ -15,7 +16,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([localeInterceptor])),
+    provideHttpClient(withInterceptors([localeInterceptor, authInterceptor])),
     provideTranslateService({
       fallbackLang: DEFAULT_LOCALE,
       lang: DEFAULT_LOCALE,

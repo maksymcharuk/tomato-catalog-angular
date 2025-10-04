@@ -7,13 +7,21 @@ import {
 } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Dispatcher } from '@ngrx/signals/events';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { debounceTime } from 'rxjs';
 
 import { FilterBarStore } from './fiter-bar.store';
 import { appEvents } from '../../store/events';
 import { FilterBarForm } from './types';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    FloatLabelModule,
+  ],
   providers: [FilterBarStore],
   selector: 'filter-bar',
   templateUrl: './filter-bar.component.html',
@@ -32,7 +40,7 @@ export class FilterBar {
   });
 
   constructor() {
-    this.form.valueChanges.subscribe((value) => {
+    this.form.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
       this.dispatcher.dispatch(appEvents.filtersChanged(value));
     });
 

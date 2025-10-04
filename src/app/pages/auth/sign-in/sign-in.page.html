@@ -1,0 +1,32 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Увійти</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <p-floatlabel variant="in">
+          <input
+            fluid
+            pInputText
+            id="email"
+            type="email"
+            formControlName="email"
+          />
+          <label for="email">Електронна пошта</label>
+        </p-floatlabel>
+      </div>
+      <div class="mb-6">
+        <p-floatlabel variant="in">
+          <p-password
+            fluid
+            inputId="password"
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+          />
+          <label for="password">Пароль</label>
+        </p-floatlabel>
+      </div>
+      <button pButton class="w-full" type="submit">Увійти</button>
+    </form>
+  </div>
+</div>

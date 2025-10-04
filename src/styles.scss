@@ -1,11 +1,1 @@
-@import "../node_modules/primeflex/primeflex.css";
-
-html,
-body {
-  margin: 0;
-}
-
-.container {
-  width: 990px;
-  margin: 0 auto;
-}
+@use "tailwindcss";
