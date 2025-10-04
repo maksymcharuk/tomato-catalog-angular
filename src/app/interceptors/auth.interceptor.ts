@@ -1,11 +1,16 @@
 import { HttpRequest, HttpEvent, HttpHandlerFn } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { AuthService } from '../services/auth.service';
+import { inject } from '@angular/core';
+
 export function authInterceptor(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
-  const token = localStorage.getItem('token');
+  const authService = inject(AuthService);
+
+  const token = authService.getToken();
   if (token) {
     const cloned = request.clone({
       setHeaders: {
@@ -14,5 +19,6 @@ export function authInterceptor(
     });
     return next(cloned);
   }
+
   return next(request);
 }

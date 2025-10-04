@@ -1,1 +1,32 @@
-<language-switcher />
+<div class="grid grid-cols-6 gap-4">
+  <div class="col-span-1 sm:col-span-1">
+    @if (store.currentUser()) {
+      <button
+        pButton
+        size="large"
+        [routerLink]="[adminPanelLink]"
+        type="button"
+      >
+        Адмінка
+      </button>
+    }
+  </div>
+
+  <div class="col-span-4 sm:col-span-4">
+    @if (showFilters()) {
+      <filter-bar />
+    }
+  </div>
+
+  <div class="col-span-1 sm:col-span-1 text-right">
+    @if (!store.currentUser()) {
+      <button pButton size="large" [routerLink]="[signInLink]" type="button">
+        Увійти
+      </button>
+    } @else {
+      <button pButton size="large" (click)="onSignOut()" type="button">
+        Вийти
+      </button>
+    }
+  </div>
+</div>

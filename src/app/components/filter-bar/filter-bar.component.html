@@ -1,14 +1,12 @@
-<form [formGroup]="form" class="grid grid-cols-6 gap-4">
-  <div class="col-span-6 sm:col-start-2 sm:col-span-4">
-    <p-floatlabel variant="in">
-      <input
-        pInputText
-        id="search"
-        class="w-full"
-        formControlName="query"
-        autocomplete="off"
-      />
-      <label for="search">Пошук по назві</label>
-    </p-floatlabel>
-  </div>
+<form [formGroup]="form">
+  <p-floatlabel variant="in">
+    <input
+      pInputText
+      id="search"
+      class="w-full"
+      formControlName="query"
+      autocomplete="off"
+    />
+    <label for="search">Пошук по назві</label>
+  </p-floatlabel>
 </form>

@@ -9,12 +9,16 @@ import { switchMap, map, take, filter } from 'rxjs';
 
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE } from '../configs/locales';
 import { Tomato } from '../api/tomatoes';
+import { User } from '../api/users';
+
+import { AuthService } from '../services/auth.service';
 import { TomatoesApiService } from '../services/tomatoes-api.service';
 import {
   appEvents,
   tomatoesApiEvents,
   tomatoesEvents,
   Filters,
+  authEvents,
 } from './events';
 
 import translationsEn from '../../../public/i18n/en.json';
@@ -23,6 +27,9 @@ import translationsUk from '../../../public/i18n/uk.json';
 type AppState = {
   // Common
   locale: string;
+
+  // User
+  currentUser: User | null;
 
   // Filter
   filters: Filters;
@@ -39,6 +46,8 @@ type AppState = {
 const initialState: AppState = {
   locale: DEFAULT_LOCALE,
 
+  currentUser: null,
+
   filters: {},
 
   tomatoes: [],
@@ -54,6 +63,13 @@ export const AppStore = signalStore(
     // Common
     on(appEvents.localeChanged, ({ payload: locale }) => ({
       locale,
+    })),
+    // User
+    on(appEvents.userSignedIn, ({ payload: user }) => ({
+      currentUser: user,
+    })),
+    on(appEvents.userSignedOut, () => ({
+      currentUser: null,
     })),
     // Filter
     on(
@@ -88,6 +104,7 @@ export const AppStore = signalStore(
       events = inject(Events),
       route = inject(ActivatedRoute),
       translate = inject(TranslateService),
+      authService = inject(AuthService),
       tomatoesApiService = inject(TomatoesApiService),
     ) => ({
       setTranslations$: events.on(appEvents.localeChanged).pipe(
@@ -132,17 +149,32 @@ export const AppStore = signalStore(
           return appEvents.filtersInitialized(initialFilters);
         }),
       ),
+      logout$: events.on(authEvents.logout).pipe(
+        map(() => {
+          authService.logout();
+          return appEvents.userSignedOut();
+        }),
+      ),
     }),
   ),
   withHooks({
     onInit: (store) => {
       const translate = inject(TranslateService);
+      const authService = inject(AuthService);
+      const dispatcher = inject(Dispatcher);
 
       // Preload translations
       translate.setTranslation('en', translationsEn);
       translate.setTranslation('uk', translationsUk);
       translate.addLangs(AVAILABLE_LOCALES);
       translate.setFallbackLang(DEFAULT_LOCALE);
+
+      if (authService.isAuthenticated()) {
+        const user = authService.getCurrentUser();
+        if (user) {
+          dispatcher.dispatch(appEvents.userSignedIn(user));
+        }
+      }
 
       effect(() => {
         // 👇 The effect is re-executed on state change.
