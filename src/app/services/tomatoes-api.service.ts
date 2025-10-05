@@ -45,6 +45,24 @@ export class TomatoesApiService {
       },
     );
   }
+
+  create(data: Partial<Tomato>): Observable<ApiResponse<Tomato>> {
+    return this.http.post<ApiResponse<Tomato>>(
+      `${environment.apiUrl}/tomatoes`,
+      { data },
+    );
+  }
+
+  update(id: string, data: Partial<Tomato>): Observable<ApiResponse<Tomato>> {
+    return this.http.put<ApiResponse<Tomato>>(
+      `${environment.apiUrl}/tomatoes/${id}`,
+      { data },
+    );
+  }
+
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/tomatoes/${id}`);
+  }
 }
 
 function buildFiltersQuery(filters?: Filters): any {

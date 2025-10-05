@@ -135,6 +135,44 @@ export const AppStore = signalStore(
           );
         }),
       ),
+      createTomato$: events.on(tomatoesEvents.createTomato).pipe(
+        switchMap(({ payload: tomato }) => {
+          return tomatoesApiService.create(tomato).pipe(
+            mapResponse({
+              next: (response) =>
+                tomatoesApiEvents.createSuccess(response.data),
+              error: (error: { message: string }) =>
+                tomatoesApiEvents.createFailure(error.message),
+            }),
+          );
+        }),
+      ),
+      updateTomato$: events.on(tomatoesEvents.updateTomato).pipe(
+        switchMap(({ payload: tomato }) => {
+          return tomatoesApiService
+            .update(tomato.documentId, tomato.changes)
+            .pipe(
+              mapResponse({
+                next: (response) =>
+                  tomatoesApiEvents.updateSuccess(response.data),
+                error: (error: { message: string }) =>
+                  tomatoesApiEvents.updateFailure(error.message),
+              }),
+            );
+        }),
+      ),
+      deleteTomato$: events.on(tomatoesEvents.deleteTomato).pipe(
+        switchMap(({ payload: id }) => {
+          return tomatoesApiService.delete(id).pipe(
+            mapResponse({
+              next: () => tomatoesApiEvents.deleteSuccess(id),
+              error: (error: { message: string }) =>
+                tomatoesApiEvents.deleteFailure(error.message),
+            }),
+          );
+        }),
+      ),
+      // Initialize filters from query params on app start
       initializeFilters$: route.queryParams.pipe(
         filter((params) => Object.keys(params).length !== 0),
         take(1),

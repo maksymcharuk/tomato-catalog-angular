@@ -47,7 +47,7 @@ export const TomatoesViewStore = signalStore(
       effect(() => {
         const tomato = store.tomato();
         if (tomato) {
-          title.setTitle(`${tomato.name} - BC`);
+          title.setTitle(`${tomato.name}`);
         } else {
           title.setTitle('Tomato Not Found - Tomatoes Catalog');
         }

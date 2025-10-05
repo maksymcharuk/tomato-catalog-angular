@@ -6,21 +6,33 @@ import { withEffects } from '@ngrx/signals/events';
 import { map } from 'rxjs';
 
 import { AppStore } from '../../../store/app.store';
-import { appEvents, tomatoesEvents } from '../../../store/events';
+import { appEvents, authEvents, tomatoesEvents } from '../../../store/events';
+import { LocaleRouterService } from '../../../services/locale-router.service';
 
-type TomatoesIndexState = {};
+type DashboardPageState = {};
 
-const initialState: TomatoesIndexState = {};
+const initialState: DashboardPageState = {};
 
-export const TomatoesIndexStore = signalStore(
+export const DashboardPageStore = signalStore(
   withState(initialState),
   withProps((store, appStore = inject(AppStore)) => ({
+    currentUser: appStore.currentUser,
     filters: appStore.filters,
     tomatoes: appStore.tomatoes,
     tomatoesLoading: appStore.tomatoesLoading,
   })),
   withEffects(
-    (store, events = inject(Events), dispatcher = inject(Dispatcher)) => ({
+    (
+      store,
+      events = inject(Events),
+      dispatcher = inject(Dispatcher),
+      localeRouter = inject(LocaleRouterService),
+    ) => ({
+      logout$: events.on(authEvents.logout).pipe(
+        map(() => {
+          localeRouter.navigate(['/']);
+        }),
+      ),
       loadTomatoesOnLocaleChanged$: events.on(appEvents.localeChanged).pipe(
         map(() => {
           dispatcher.dispatch(tomatoesEvents.loadTomatoes(store.filters()));
