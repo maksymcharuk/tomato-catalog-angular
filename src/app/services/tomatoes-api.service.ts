@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { ApiResponse } from '../api/shared';
 import { Tomato } from '../api/tomatoes';
 import { Filters } from '../store/events';
+import { CreateTomatoDto, UpdateTomatoDto } from '../api/dtos/tomatoes';
 
 @Injectable({
   providedIn: 'root',
@@ -46,14 +47,17 @@ export class TomatoesApiService {
     );
   }
 
-  create(data: Partial<Tomato>): Observable<ApiResponse<Tomato>> {
+  create(data: CreateTomatoDto): Observable<ApiResponse<Tomato>> {
     return this.http.post<ApiResponse<Tomato>>(
       `${environment.apiUrl}/tomatoes`,
       { data },
     );
   }
 
-  update(id: string, data: Partial<Tomato>): Observable<ApiResponse<Tomato>> {
+  update(
+    id: string,
+    data: Partial<CreateTomatoDto>,
+  ): Observable<ApiResponse<Tomato>> {
     return this.http.put<ApiResponse<Tomato>>(
       `${environment.apiUrl}/tomatoes/${id}`,
       { data },

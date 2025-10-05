@@ -2,8 +2,8 @@ export interface CreateTomatoDto {
   name: string;
   description?: string;
   price?: number;
-  images?: string[];
-  primaryImage?: string;
+  images?: File[];
+  primaryImage?: File;
 }
 
 export interface UpdateTomatoDto {

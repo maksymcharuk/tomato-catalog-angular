@@ -24,6 +24,7 @@ import { Tomato } from '../../api/tomatoes';
 import { TomatoFormStore } from './tomato-form.component.state';
 import { LocaleService } from '../../services/locale.service';
 import { tomatoesEvents } from '../../store/events';
+import { tomatoFormEvents } from './tomato-form.events';
 
 @Component({
   imports: [
@@ -45,8 +46,8 @@ import { tomatoesEvents } from '../../store/events';
 })
 export class TomatoForm {
   private readonly fb = inject(NonNullableFormBuilder);
-  private readonly store = inject(TomatoFormStore);
   private readonly dispatcher = inject(Dispatcher);
+  readonly store = inject(TomatoFormStore);
   readonly localeService = inject(LocaleService);
 
   readonly tomato = input<Tomato | null>(null);
@@ -56,6 +57,7 @@ export class TomatoForm {
     price: this.fb.control(0),
     description: this.fb.control(''),
     published: this.fb.control(true),
+    images: this.fb.control<File[]>([]),
   });
 
   constructor() {
@@ -71,8 +73,29 @@ export class TomatoForm {
     });
   }
 
+  choose(event: Event, callback: () => void) {
+    callback();
+  }
+
+  onRemoveTemplatingFile(
+    event: Event,
+    file: File,
+    removeFileCallback: (event: Event, index: number) => void,
+    index: number,
+  ) {
+    removeFileCallback(event, index);
+  }
+
+  onFileSelect(event: { originalEvent: Event; currentFiles: File[] }) {
+    const files = event.currentFiles;
+    if (files && files.length > 0) {
+      this.form.patchValue({
+        images: files,
+      });
+    }
+  }
+
   onSubmit() {
-    console.log(this.form.value);
     if (this.form.invalid) return;
 
     const tomato = this.tomato();
@@ -80,21 +103,25 @@ export class TomatoForm {
 
     if (tomato) {
       this.dispatcher.dispatch(
-        tomatoesEvents.updateTomato({
+        tomatoFormEvents.updateTomato({
           documentId: tomato.documentId,
           changes: {
             name: formValue.name!,
-            price: formValue.price!,
-            description: formValue.description!,
+            price: formValue.price,
+            description: formValue.description,
+            images: formValue.images,
+            primaryImage: formValue.images ? formValue.images[0] : undefined,
           },
         }),
       );
     } else {
       this.dispatcher.dispatch(
-        tomatoesEvents.createTomato({
+        tomatoFormEvents.createTomato({
           name: formValue.name!,
-          price: formValue.price!,
-          description: formValue.description!,
+          price: formValue.price,
+          description: formValue.description,
+          images: formValue.images,
+          primaryImage: formValue.images ? formValue.images[0] : undefined,
         }),
       );
     }
