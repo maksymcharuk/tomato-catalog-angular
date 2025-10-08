@@ -1,5 +1,5 @@
 export interface Media {
-  id: string;
+  id: number;
   documentId: string;
   name: string;
   alternativeText: string | null;

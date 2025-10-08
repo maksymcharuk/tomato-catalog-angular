@@ -7,7 +7,7 @@ import { map, of, switchMap } from 'rxjs';
 import { UploadApiService } from '../../services/upload-api.service';
 import { TomatoesApiService } from '../../services/tomatoes-api.service';
 import { tomatoFormEvents } from './tomato-form.events';
-import { tomatoesApiEvents } from '../../store/events';
+import { UpdateTomatoDto } from './types';
 
 type TomatoFormState = {
   isSaving: boolean;
@@ -64,7 +64,7 @@ export const TomatoFormStore = signalStore(
             return of({
               ...data,
               images: [],
-              primaryImage: '',
+              primaryImage: undefined,
             });
           }
           return uploadApiService.upload({ files: data.images }).pipe(
@@ -73,7 +73,7 @@ export const TomatoFormStore = signalStore(
               return {
                 ...data,
                 images: uploadedFiles,
-                primaryImage: uploadedFiles[0] || '',
+                primaryImage: uploadedFiles[0],
               };
             }),
           );
@@ -91,37 +91,32 @@ export const TomatoFormStore = signalStore(
       ),
       updateTomato$: events.on(tomatoFormEvents.updateTomato).pipe(
         switchMap(({ payload: data }) => {
-          if (!data.changes.images || data.changes.images.length === 0) {
-            return of({
-              ...data,
-              changes: {
-                ...data.changes,
-                images: [],
-                primaryImage: '',
-              },
-            });
+          const { ids, files } = splitUrlsAndFiles(data.changes.images ?? []);
+          if (files.length === 0) {
+            return of(data);
           }
-          return uploadApiService.upload({ files: data.changes.images }).pipe(
+          return uploadApiService.upload({ files }).pipe(
             map((response) => {
               const uploadedFiles = response.map((file) => file.id);
               return {
                 ...data,
                 changes: {
                   ...data.changes,
-                  images: uploadedFiles,
-                  primaryImage: uploadedFiles[0] || '',
+                  images: uploadedFiles.concat(ids),
+                  primaryImage: ids[0] || uploadedFiles[0],
                 },
               };
             }),
           );
         }),
         switchMap(({ documentId, changes }) => {
-          return tomatoesApiService.update(documentId, changes).pipe(
+          const sanitized = sanitizedChanges(changes);
+          return tomatoesApiService.update(documentId, sanitized).pipe(
             mapResponse({
               next: (response) =>
-                tomatoesApiEvents.updateSuccess(response.data),
+                tomatoFormEvents.updateTomatoSuccess(response.data),
               error: (error: { message: string }) =>
-                tomatoesApiEvents.updateFailure(error.message),
+                tomatoFormEvents.updateTomatoFailure(error.message),
             }),
           );
         }),
@@ -129,3 +124,20 @@ export const TomatoFormStore = signalStore(
     }),
   ),
 );
+
+function splitUrlsAndFiles(images: (File | number)[]) {
+  const ids = images.filter((image) => typeof image === 'number');
+  const files = images.filter((image) => typeof image !== 'number');
+  return { ids, files };
+}
+
+function sanitizedChanges(changes: UpdateTomatoDto['changes']) {
+  return {
+    ...changes,
+    images: (changes.images ?? []).filter((image) => typeof image === 'number'),
+    primaryImage:
+      typeof changes.primaryImage === 'number'
+        ? changes.primaryImage
+        : undefined,
+  };
+}

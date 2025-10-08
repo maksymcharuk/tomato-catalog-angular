@@ -20,10 +20,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 
 import { Tomato } from '../../api/tomatoes';
+import { Media } from '../../api/shared';
 
 import { TomatoFormStore } from './tomato-form.component.state';
 import { LocaleService } from '../../services/locale.service';
-import { tomatoesEvents } from '../../store/events';
 import { tomatoFormEvents } from './tomato-form.events';
 
 @Component({
@@ -51,12 +51,13 @@ export class TomatoForm {
   readonly localeService = inject(LocaleService);
 
   readonly tomato = input<Tomato | null>(null);
+  readonly currentImages = new Map<number, Media>();
 
   readonly form = this.fb.group({
     name: this.fb.control('', [Validators.required]),
     price: this.fb.control(0),
     description: this.fb.control(''),
-    published: this.fb.control(true),
+    // published: this.fb.control(true),
     images: this.fb.control<File[]>([]),
   });
 
@@ -64,11 +65,22 @@ export class TomatoForm {
     effect(() => {
       const tomato = this.tomato();
       if (tomato) {
+        this.initImages(tomato);
+
         this.form.patchValue({
           name: tomato.name,
           price: tomato.price,
           description: tomato.description,
         });
+      }
+    });
+  }
+
+  initImages(tomato: Tomato) {
+    this.currentImages.clear();
+    (tomato.images ?? []).forEach((image) => {
+      if (image.id) {
+        this.currentImages.set(image.id, image);
       }
     });
   }
@@ -84,6 +96,10 @@ export class TomatoForm {
     index: number,
   ) {
     removeFileCallback(event, index);
+  }
+
+  onRemoveUploadedFile(file: Media) {
+    this.currentImages.delete(file.id);
   }
 
   onFileSelect(event: { originalEvent: Event; currentFiles: File[] }) {
@@ -109,8 +125,14 @@ export class TomatoForm {
             name: formValue.name!,
             price: formValue.price,
             description: formValue.description,
-            images: formValue.images,
-            primaryImage: formValue.images ? formValue.images[0] : undefined,
+            images: [
+              ...Array.from(this.currentImages.keys()),
+              ...(formValue.images ?? []),
+            ],
+            primaryImage:
+              !tomato.primaryImage && formValue.images
+                ? formValue.images[0]
+                : undefined,
           },
         }),
       );

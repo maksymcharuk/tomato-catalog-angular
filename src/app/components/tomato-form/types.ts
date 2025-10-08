@@ -6,7 +6,13 @@ export interface CreateTomatoDto {
   primaryImage?: File;
 }
 
+interface UpdateTomatoChangesDto
+  extends Partial<Omit<CreateTomatoDto, 'images' | 'primaryImage'>> {
+  images?: (File | number)[];
+  primaryImage?: File | number;
+}
+
 export interface UpdateTomatoDto {
   documentId: string;
-  changes: Partial<CreateTomatoDto>;
+  changes: UpdateTomatoChangesDto;
 }

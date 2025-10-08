@@ -20,10 +20,8 @@ export const TomatoesEditPageStore = signalStore(
       const route = inject(ActivatedRoute);
       const dispatcher = inject(Dispatcher);
 
-      if (!store.tomato()) {
-        const id = route.snapshot.params['id'];
-        dispatcher.dispatch(tomatoesEvents.loadTomato(id));
-      }
+      const id = route.snapshot.params['id'];
+      dispatcher.dispatch(tomatoesEvents.loadTomato(id));
     },
   }),
 );
