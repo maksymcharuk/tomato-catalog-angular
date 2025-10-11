@@ -67,6 +67,29 @@ export class TomatoesApiService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/tomatoes/${id}`);
   }
+
+  import(): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/tomatoes/import`, {});
+  }
+
+  labels(ids?: string[]): Observable<Blob> {
+    const params = new HttpParams();
+
+    if (ids && ids.length === 0) {
+      params.set('ids', ids.join(','));
+    }
+
+    return this.http.get(`${environment.apiUrl}/tomatoes/labels`, {
+      responseType: 'blob',
+      params,
+    });
+  }
+
+  label(id: string): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/tomatoes/labels/${id}`, {
+      responseType: 'blob',
+    });
+  }
 }
 
 function buildFiltersQuery(filters?: Filters): any {

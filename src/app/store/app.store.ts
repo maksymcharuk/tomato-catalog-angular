@@ -172,6 +172,50 @@ export const AppStore = signalStore(
           );
         }),
       ),
+      importTomatoes$: events.on(tomatoesEvents.importTomatoes).pipe(
+        switchMap(() => {
+          return tomatoesApiService.import().pipe(
+            mapResponse({
+              next: () => tomatoesApiEvents.importSuccess(),
+              error: (error: { message: string }) =>
+                tomatoesApiEvents.importFailure(error.message),
+            }),
+          );
+        }),
+      ),
+      generateLabels$: events.on(tomatoesEvents.generateLabels).pipe(
+        switchMap(({ payload: ids }) => {
+          return tomatoesApiService.labels(ids).pipe(
+            mapResponse({
+              next: () => tomatoesApiEvents.generateLabelsSuccess(),
+              error: (error: { message: string }) =>
+                tomatoesApiEvents.generateLabelsFailure(error.message),
+            }),
+          );
+        }),
+      ),
+      generateLabel$: events.on(tomatoesEvents.generateLabel).pipe(
+        switchMap(({ payload: id }) => {
+          return tomatoesApiService.label(id).pipe(
+            mapResponse({
+              next: (response) =>
+                tomatoesApiEvents.generateLabelSuccess(response),
+              error: (error: { message: string }) =>
+                tomatoesApiEvents.generateLabelFailure(error.message),
+            }),
+          );
+        }),
+      ),
+      downloadLabel$: events.on(tomatoesApiEvents.generateLabelSuccess).pipe(
+        map(({ payload: response }) => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `label.pdf`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        }),
+      ),
       // Initialize filters from query params on app start
       initializeFilters$: route.queryParams.pipe(
         filter((params) => Object.keys(params).length !== 0),

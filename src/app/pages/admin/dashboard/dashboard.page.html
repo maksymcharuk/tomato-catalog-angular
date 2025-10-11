@@ -2,6 +2,41 @@
   <div class="my-4">
     <app-bar [showFilters]="false" [isAdminPage]="true" />
   </div>
+  <div class="mt-4 mb-2 flex justify-end gap-2">
+    <button
+      pButton
+      class="whitespace-nowrap"
+      severity="info"
+      size="large"
+      type="button"
+      icon="pi pi-upload"
+      (click)="generateLabels()"
+    >
+      Завантажити етикетки
+    </button>
+    <button
+      pButton
+      class="whitespace-nowrap"
+      severity="info"
+      size="large"
+      type="button"
+      icon="pi pi-upload"
+      (click)="importTomatoes()"
+    >
+      Імпортувати томати
+    </button>
+    <button
+      pButton
+      [routerLink]="[createTomatoLink]"
+      class="whitespace-nowrap"
+      severity="help"
+      size="large"
+      type="button"
+      icon="pi pi-plus"
+    >
+      Додати томат
+    </button>
+  </div>
   <p-table
     [value]="store.tomatoes()"
     [loading]="store.tomatoesLoading()"

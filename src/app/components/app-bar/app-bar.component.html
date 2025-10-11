@@ -6,17 +6,6 @@
           <button pButton size="large" [routerLink]="['/']" type="button">
             Головна
           </button>
-          <button
-            pButton
-            [routerLink]="[createTomatoLink]"
-            class="whitespace-nowrap"
-            severity="help"
-            size="large"
-            type="button"
-            icon="pi pi-plus"
-          >
-            Додати томат
-          </button>
         </div>
       } @else {
         <button
@@ -43,7 +32,13 @@
         Увійти
       </button>
     } @else {
-      <button pButton size="large" (click)="onSignOut()" type="button">
+      <button
+        pButton
+        size="large"
+        (click)="onSignOut()"
+        type="button"
+        [outlined]="true"
+      >
         Вийти
       </button>
     }

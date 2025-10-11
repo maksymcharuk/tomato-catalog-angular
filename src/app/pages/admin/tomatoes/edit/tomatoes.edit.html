@@ -2,6 +2,19 @@
   <div class="my-4">
     <app-bar [showFilters]="false" [isAdminPage]="false" />
   </div>
+  <div class="my-4">
+    <button
+      pButton
+      class="whitespace-nowrap"
+      severity="info"
+      size="large"
+      type="button"
+      icon="pi pi-upload"
+      (click)="generateLabel()"
+    >
+      Завантажити етикетку
+    </button>
+  </div>
   <div class="flex justify-center my-4">
     <tomato-form class="max-w-md" [tomato]="store.tomato()" />
   </div>

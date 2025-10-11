@@ -12,5 +12,8 @@ export const tomatoesEvents = eventGroup({
     createTomato: type<CreateTomatoDto>(),
     updateTomato: type<UpdateTomatoDto>(),
     deleteTomato: type<string>(),
+    importTomatoes: type<void>(),
+    generateLabels: type<string[] | undefined>(),
+    generateLabel: type<string>(),
   },
 });

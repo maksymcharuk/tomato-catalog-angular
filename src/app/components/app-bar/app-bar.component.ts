@@ -31,7 +31,6 @@ export class AppBar {
 
   readonly adminPanelLink = `/${this.localeService.getLocale()}/admin/dashboard`;
   readonly signInLink = `/${this.localeService.getLocale()}/sign-in`;
-  readonly createTomatoLink = `/${this.localeService.getLocale()}/admin/tomatoes/create`;
 
   onSignOut() {
     this.dispatcher.dispatch(authEvents.logout());

@@ -16,5 +16,11 @@ export const tomatoesApiEvents = eventGroup({
     updateFailure: type<string>(),
     deleteSuccess: type<string>(),
     deleteFailure: type<string>(),
+    importSuccess: type<void>(),
+    importFailure: type<string>(),
+    generateLabelsSuccess: type<void>(),
+    generateLabelsFailure: type<string>(),
+    generateLabelSuccess: type<Blob>(),
+    generateLabelFailure: type<string>(),
   },
 });
